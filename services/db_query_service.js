@@ -33,18 +33,11 @@ class DB {
     const lastIndex = `$${parseInt(columnsToUpdate.slice(-1).pop().split(' ').pop().split('')[1]) + 1}`
     const params = values.concat(value)
 
-    // console.log(columnsToUpdate)
-    // console.log(params)
-    // console.log(lastIndex)
-
-    // // ${columnsToUpdate.join(',')}
-    // // await db.query(`Update person set name = $1, surname = $2 where id = $3`, [name, surname]),
-
     await db.query(`UPDATE "${tableName}" set ${columnsToUpdate.join(',')} where ${field} = ${lastIndex}`, params)
   }
-  delete() {}
+  async deleteByValue(tableName, field, value) {
+    await db.query(`DELETE FROM "${tableName}" where ${field} = $1`, [value])
+  }
 }
 
 export default new DB(db)
-
-// tableName, [...columns], [...values], field, value

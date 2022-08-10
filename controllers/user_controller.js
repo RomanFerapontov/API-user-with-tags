@@ -19,15 +19,18 @@ export class UserController {
       const values = Object.values(req.body)
 
       await db.updateByValue(columns, 'user', values, 'uid', uid)
+      const newUser = await db.findByValue(['email', 'nickname'], 'user', 'uid', uid)
 
-      res.status(200).json({})
+      res.status(200).json(newUser[0])
     } catch ({ message }) {
       res.status(400).json({ error: message })
     }
   }
   async deleteUser(req, res) {
     try {
-      res.status(200).json({})
+      const { uid, nickname } = req.user
+      await db.deleteByValue('user', 'uid', uid)
+      res.status(200).json({ message: `User ${nickname} was successfully delited.` })
     } catch ({ message }) {
       res.status(400).json({ error: message })
     }

@@ -7,7 +7,7 @@ export class TagRoutes {
     this.authorize = new ApiMiddleware().authorize
   }
   route(app) {
-    app.get('/tag', [this.authorize], this.tagController.getTagById)
+    app.get('/tag', [this.authorize], this.tagController.getTags)
     app.post('/tag', [this.authorize], this.tagController.createTag)
     app.get('/tag/:id', [this.authorize], this.tagController.getTagById)
     app.put('/tag/:id', [this.authorize], this.tagController.updateTagById)

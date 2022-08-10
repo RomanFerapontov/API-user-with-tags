@@ -16,6 +16,20 @@ export class TagController {
   }
   async getTags(req, res) {
     try {
+      console.log(req.query)
+
+      const tags = await db.findAll(['creator', 'name', 'sortorder'], 'tag')
+      const creators = await db.findAll(['nickname', 'uid'], 'user')
+
+      const tagsWithCreators = tags.map((tag) => {
+        for (let key of creators) {
+          if (key.uid == tag.creator) {
+            tag.creator = key
+            return tag
+          }
+        }
+      })
+
       res.status(200).json({})
     } catch ({ message }) {
       res.status(400).json({ error: message })
@@ -23,7 +37,11 @@ export class TagController {
   }
   async getTagById(req, res) {
     try {
-      res.status(200).json({})
+      const tag = await db.findByValue(['creator', 'name', 'sortorder'], 'tag', 'id', req.params.id)
+      const user = await db.findByValue(['nickname', 'uid'], 'user', 'uid', tag[0].creator)
+      tag[0].creator = user[0]
+
+      res.status(200).json(tag[0])
     } catch ({ message }) {
       res.status(400).json({ error: message })
     }

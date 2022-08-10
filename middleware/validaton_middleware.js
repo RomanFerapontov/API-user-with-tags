@@ -90,6 +90,15 @@ export class ApiMiddleware {
         }
       })
 
+      const userNickname = await db.findByValue(['*'], 'user', 'nickname', req.body.nickname)
+      const userEmail = await db.findByValue(['*'], 'user', 'nickname', req.body.email)
+
+      if (userNickname[0]) {
+        throw new Error(`User with name ${req.body.nickname} is already exists`)
+      }
+      if (userEmail[0]) {
+        throw new Error(`User with email ${req.body.email} is already exists`)
+      }
       if (req.body.password) {
         req.body.password = await hashPassword(req.body.password)
       }
