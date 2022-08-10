@@ -1,20 +1,28 @@
-import { validate, register, authorize } from '../middleware/index.js'
-import { AuthController } from '../controllers/auth_controller.js'
 import { checkSchema } from 'express-validator'
-import validationSchema from '../models/validation-schema.js'
-import authSchema from '../models/auth-schema.js'
+import loginSchema from '../models/login_schema.js'
+import signinSchema from '../models/signin_schema.js'
+import { AuthController } from '../controllers/auth_controller.js'
+import { ApiMiddleware } from '../middleware/validaton_middleware.js'
 
 export class AuthRoutes {
   constructor() {
     this.authController = new AuthController()
+    this.validate = new ApiMiddleware().validate
+    this.authorize = new ApiMiddleware().authorize
+    this.registrate = new ApiMiddleware().registrate
+    this.authenticate = new ApiMiddleware().authenticate
   }
   route(app) {
     app.post(
       '/signin',
-      [checkSchema(validationSchema), validate, register],
+      [checkSchema(signinSchema), this.validate, this.registrate],
       this.authController.signin,
     )
-    app.post('/login', [checkSchema(authSchema), validate, authorize], this.authController.login)
-    app.post('/logout', this.authController.logout)
+    app.post(
+      '/login',
+      [checkSchema(loginSchema), this.validate, this.authenticate],
+      this.authController.login,
+    )
+    app.post('/logout', this.authorize, this.authController.logout)
   }
 }

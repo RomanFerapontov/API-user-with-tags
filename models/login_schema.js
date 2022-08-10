@@ -1,4 +1,4 @@
-const authSchema = {
+const loginSchema = {
   password: {
     notEmpty: true,
     errorMessage: 'Password field is empty.',
@@ -9,4 +9,4 @@ const authSchema = {
   },
 }
 
-export default authSchema
+export default loginSchema

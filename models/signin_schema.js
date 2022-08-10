@@ -1,4 +1,4 @@
-const validationSchema = {
+const signinSchema = {
   nickname: {
     notEmpty: true,
     errorMessage:
@@ -22,4 +22,4 @@ const validationSchema = {
   },
 }
 
-export default validationSchema
+export default signinSchema
